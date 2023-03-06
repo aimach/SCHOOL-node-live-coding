@@ -1,0 +1,6 @@
+PUT http://localhost:3000/api/wilder/11
+Content-Type: application/json
+
+{
+  "name": "Marie-Hermine Schneider"
+}

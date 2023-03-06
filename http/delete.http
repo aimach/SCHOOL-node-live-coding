@@ -1,0 +1,3 @@
+DELETE http://localhost:3000/api/wilder/13
+Content-Type: application/json
+
