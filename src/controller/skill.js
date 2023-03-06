@@ -1,49 +1,49 @@
 const dataSource = require("../utils").dataSource;
-const Wilder = require("../entity/Wilder");
+const Skill = require("../entity/Skill");
 
 module.exports = {
   create: (req, res) => {
     dataSource
-      .getRepository(Wilder)
+      .getRepository(Skill)
       .save(req.body)
       .then(() => {
-        res.send("Created wilder");
+        res.send("Created skill");
       })
       .catch(() => {
-        res.send("Error while creating wilder")
+        res.send("Error while creating skill")
       })
   },
   read: (req, res) => {
     dataSource
-      .getRepository(Wilder)
+      .getRepository(Skill)
       .find()
       .then((data) => {
         res.send(data);
       })
       .catch(() => {
-        res.send("Error while reading wilders")
+        res.send("Error while reading skills")
       })
   },
   update: (req, res) => {
     dataSource
-      .getRepository(Wilder)
+      .getRepository(Skill)
       .update(req.params.id, { name: req.body.name })
       .then(() => {
-        res.send("Updated wilder");
+        res.send("Updated skill");
       })
       .catch(() => {
-        res.send("Error while updating wilder")
+        res.send("Error while updating skill")
       })
   },
   delete: (req, res) => {
     dataSource
-      .getRepository(Wilder)
+      .getRepository(Skill)
       .delete(parseInt(req.params.id))
       .then(() => {
-        res.send("Deleted wilder");
+        res.send("Deleted skill");
       })
       .catch(() => {
-        res.send("Error while deleting wilder")
+        res.send("Error while deleting skill")
       })
   },
 }
