@@ -6,7 +6,7 @@ POST http://localhost:3000/api/skill
 Content-Type: application/json
 
 {
-  "name": "Git"
+  "name": "SCRUM"
 }
 
 ###
@@ -19,5 +19,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/api/skill/1
+DELETE http://localhost:3000/api/skill/5
 Content-Type: application/json
