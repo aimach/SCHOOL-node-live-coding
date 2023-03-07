@@ -1,5 +1,6 @@
 const dataSource = require("../utils").dataSource;
 const Skill = require("../entity/Skill");
+const Wilder = require("../entity/Wilder")
 
 module.exports = {
   create: async (req, res) => {
@@ -8,11 +9,11 @@ module.exports = {
         .getRepository(Skill)
         .save(req.body)
         .then(() => {
-          res.send("Created skill");
+          res.status(201).send("Created skill");
         })
     } catch (err) {
       console.log(err);
-      res.send("Error while creating skill")
+      res.status(404).send("Error while creating skill")
     }
   },
   read: async (req, res) => {
@@ -21,11 +22,11 @@ module.exports = {
         .getRepository(Skill)
         .find()
         .then((data) => {
-          res.send(data);
+          res.status(200).send(data);
         })
     } catch (err) {
       console.log(err);
-      res.send("Error while reading skills")
+      res.status(404).send("Error while reading skills")
     }
   },
   update: async (req, res) => {
@@ -34,10 +35,10 @@ module.exports = {
         .getRepository(Skill)
         .update(req.params.id, { name: req.body.name })
         .then(() => {
-          res.send("Updated skill");
+          res.status(200).send("Updated skill");
         })
     } catch (err) {
-      res.send("Error while updating skill")
+      res.status(404).send("Error while updating skill")
     }
   },
   delete: async (req, res) => {
@@ -46,10 +47,28 @@ module.exports = {
         .getRepository(Skill)
         .delete(parseInt(req.params.id))
         .then(() => {
-          res.send("Deleted skill");
+          res.status(200).send("Deleted skill");
         })
     } catch (err) {
-      res.send("Error while deleting skill")
+      res.status(404).send("Error while deleting skill")
+    }
+  },
+  addSkillToWilder: async (req, res) => {
+    try {
+      const wilderToUpdate = await dataSource
+        .getRepository(Wilder)
+        .findOneBy({ id: req.params.idWilder });
+      console.log(wilderToUpdate)
+      const skillToAdd = await dataSource
+        .getRepository(Skill)
+        .findOneBy({ id: req.params.idSkill });
+      console.log(skillToAdd)
+      wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
+      await dataSource.getRepository(Wilder).save(wilderToUpdate);
+      res.status(200).send("Skill added to wilder");
+    } catch (err) {
+      console.log(err);
+      res.status(404).send("Error while creating skill")
     }
   },
 }
