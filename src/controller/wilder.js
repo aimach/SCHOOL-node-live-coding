@@ -7,7 +7,7 @@ module.exports = {
       .getRepository(Wilder)
       .save(req.body)
       .then(() => {
-        res.send("Created wilder");
+        res.status(200).send("Created wilder");
       })
       .catch(() => {
         res.send("Error while creating wilder")
@@ -21,7 +21,7 @@ module.exports = {
         res.send(data);
       })
       .catch(() => {
-        res.send("Error while reading wilders")
+        res.status(404).send("Error while reading wilders")
       })
   },
   update: (req, res) => {
@@ -32,7 +32,7 @@ module.exports = {
         res.send("Updated wilder");
       })
       .catch(() => {
-        res.send("Error while updating wilder")
+        res.status(404).send("Error while updating wilder")
       })
   },
   delete: (req, res) => {
@@ -43,7 +43,7 @@ module.exports = {
         res.send("Deleted wilder");
       })
       .catch(() => {
-        res.send("Error while deleting wilder")
+        res.status(404).send("Error while deleting wilder")
       })
   },
 }
