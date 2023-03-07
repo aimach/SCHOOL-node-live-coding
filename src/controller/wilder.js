@@ -3,13 +3,21 @@ const Wilder = require("../entity/Wilder");
 
 module.exports = {
   create: async (req, res) => {
+    let status;
+    let message;
     try {
-      const wilderToCreate = await dataSource
+      const test = await dataSource
         .getRepository(Wilder)
-        .save(req.body)
-        .then(() => {
-          res.status(201).send("Created wilder");
-        })
+        .count({ where: { email: req.body.email } })
+      if (test > 0) {
+        status = 403;
+        message = "Email already exist";
+      } else {
+        await dataSource.getRepository(Wilder).save(req.body);
+        status = 201;
+        message = "Created wilder";
+      }
+      res.status(status).send(message);
     } catch (err) {
       console.log(err);
       res.status(404).send("Error while creating wilder")
@@ -20,9 +28,7 @@ module.exports = {
       const WilderToRead = await dataSource
         .getRepository(Wilder)
         .find()
-        .then((data) => {
-          res.status(200).send(data);
-        })
+      res.status(200).send(WilderToRead);
     } catch (err) {
       console.log(err);
       res.status(404).send("Error while reading wilders")
@@ -30,37 +36,22 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
-      const wilderToUpdate = await dataSource
+      await dataSource
         .getRepository(Wilder)
         .update(req.params.id, { name: req.body.name })
-        .then(() => {
-          res.status(200).send("Updated wilder");
-        })
+      res.status(200).send("Updated wilder");
     } catch (err) {
       res.status(404).send("Error while updating wilder")
     }
   },
   delete: async (req, res) => {
     try {
-      const wilderToDelete = await dataSource
+      await dataSource
         .getRepository(Wilder)
         .delete(parseInt(req.params.id))
-        .then(() => {
-          res.status(200).send("Deleted wilder");
-        })
+      res.status(200).send("Deleted wilder");
     } catch (err) {
       res.status(404).send("Error while deleting wilder")
     }
-  },
-  delete: (req, res) => {
-    dataSource
-      .getRepository(Wilder)
-      .delete(parseInt(req.params.id))
-      .then(() => {
-        res.send("Deleted wilder");
-      })
-      .catch(() => {
-        res.status(404).send("Error while deleting wilder")
-      })
   },
 }

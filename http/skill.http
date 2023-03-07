@@ -6,12 +6,12 @@ POST http://localhost:3000/api/skill
 Content-Type: application/json
 
 {
-  "name": "SCRUM"
+  "name": "NodeJS"
 }
 
 ###
 
-POST http://localhost:3000/api/skill/12/2
+POST http://localhost:3000/api/skill/1/2
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ PUT http://localhost:3000/api/skill/2
 Content-Type: application/json
 
 {
-  "name": "Javascript"
+  "name": "JS"
 }
 
 ###

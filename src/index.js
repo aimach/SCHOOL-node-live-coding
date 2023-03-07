@@ -6,6 +6,15 @@ const skillController = require("./controller/skill");
 const app = express();
 
 app.use(express.json());
+app.use((req, res, next) => {
+  let randomNb = Math.floor(Math.random() * 3);
+  if (randomNb === 2) {
+    console.log(req.socket.remoteAddress)
+    res.status(418).send("I'm a teapot");
+  } else {
+    next();
+  }
+});
 
 //wilder
 app.get("/api/wilder", wilderController.read);

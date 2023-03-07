@@ -8,9 +8,7 @@ module.exports = {
       const skillToCreate = await dataSource
         .getRepository(Skill)
         .save(req.body)
-        .then(() => {
-          res.status(201).send("Created skill");
-        })
+      res.status(201).send("Created skill");
     } catch (err) {
       console.log(err);
       res.status(404).send("Error while creating skill")
@@ -21,9 +19,7 @@ module.exports = {
       const skillToRead = await dataSource
         .getRepository(Skill)
         .find()
-        .then((data) => {
-          res.status(200).send(data);
-        })
+      res.status(200).send(skillToRead);
     } catch (err) {
       console.log(err);
       res.status(404).send("Error while reading skills")
@@ -31,24 +27,20 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
-      const skillToUpdate = await dataSource
+      await dataSource
         .getRepository(Skill)
         .update(req.params.id, { name: req.body.name })
-        .then(() => {
-          res.status(200).send("Updated skill");
-        })
+      res.status(200).send("Updated skill");
     } catch (err) {
       res.status(404).send("Error while updating skill")
     }
   },
   delete: async (req, res) => {
     try {
-      const skillToDelete = await dataSource
+      await dataSource
         .getRepository(Skill)
         .delete(parseInt(req.params.id))
-        .then(() => {
-          res.status(200).send("Deleted skill");
-        })
+      res.status(200).send("Deleted skill");
     } catch (err) {
       res.status(404).send("Error while deleting skill")
     }
@@ -58,11 +50,9 @@ module.exports = {
       const wilderToUpdate = await dataSource
         .getRepository(Wilder)
         .findOneBy({ id: req.params.idWilder });
-      console.log(wilderToUpdate)
       const skillToAdd = await dataSource
         .getRepository(Skill)
         .findOneBy({ id: req.params.idSkill });
-      console.log(skillToAdd)
       wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
       await dataSource.getRepository(Wilder).save(wilderToUpdate);
       res.status(200).send("Skill added to wilder");
