@@ -1,25 +1,36 @@
-GET http://localhost:3000/api/wilder
+GET http://localhost:5000/api/wilder
 
 ###
 
-POST http://localhost:3000/api/wilder
+POST http://localhost:5000/api/wilder
 Content-Type: application/json
 
 {
-  "name": "James Kirk",
-  "email": "j.kirk@federation.com"
+  "name": "Nyota Uhura",
+  "email": "n.uhura@federation.com",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 }
 
 ###
 
-PUT http://localhost:3000/api/wilder/11
+POST http://localhost:5000/api/wilder/6/skill/3
 Content-Type: application/json
 
 {
-  "name": "Marie-Hermine Schneider"
+  "name": "Another Wilder"
 }
 
 ###
 
-DELETE http://localhost:3000/api/wilder/15
+
+
+PUT http://localhost:5000/api/wilder/1
 Content-Type: application/json
+
+{
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+}
+
+###
+
+DELETE http://localhost:5000/api/wilder/6

@@ -1,57 +1,91 @@
-const dataSource = require("../utils").dataSource;
-const Wilder = require("../entity/Wilder");
+const { dataSource } = require('../utils');
+const Wilder = require('../entity/Wilder');
+const Skill = require('../entity/Skill');
 
-module.exports = {
-  create: async (req, res) => {
-    let status;
-    let message;
+class WilderController {
+  static async create(req, res) {
     try {
       const test = await dataSource
         .getRepository(Wilder)
-        .count({ where: { email: req.body.email } })
+        .count({ where: { email: req.body.email } });
       if (test > 0) {
-        status = 403;
-        message = "Email already exist";
+        res.status(403).send('Email already exist');
       } else {
         await dataSource.getRepository(Wilder).save(req.body);
-        status = 201;
-        message = "Created wilder";
+        res.status(201).send('Created wilder');
       }
-      res.status(status).send(message);
     } catch (err) {
       console.log(err);
-      res.status(404).send("Error while creating wilder")
+      res.status(400).send('Error while creating wilder');
     }
-  },
-  read: async (req, res) => {
+  }
+
+  static async read(req, res) {
     try {
       const WilderToRead = await dataSource
         .getRepository(Wilder)
-        .find()
+        .find();
       res.status(200).send(WilderToRead);
     } catch (err) {
       console.log(err);
-      res.status(404).send("Error while reading wilders")
+      res.status(400).send('Error while reading wilders');
     }
-  },
-  update: async (req, res) => {
+  }
+
+  static async update(req, res) {
     try {
+      const { id } = req.params;
+      const existingUser = await dataSource.getRepository(Wilder).findOneBy({ id });
+      if (existingUser === null) {
+        return res.status(404).send('Wilder not found');
+      }
       await dataSource
         .getRepository(Wilder)
-        .update(req.params.id, { name: req.body.name })
-      res.status(200).send("Updated wilder");
+        .update(req.params.id, { name: req.body.name });
+      res.status(200).send('Updated wilder');
     } catch (err) {
-      res.status(404).send("Error while updating wilder")
+      res.status(400).send('Error while updating wilder');
     }
-  },
-  delete: async (req, res) => {
+  }
+
+  static async delete(req, res) {
     try {
+      const { id } = req.params;
+      const existingUser = await dataSource.getRepository(Wilder).findOneBy({ id });
+      if (existingUser === null) {
+        return res.status(404).send('Wilder not found');
+      }
       await dataSource
         .getRepository(Wilder)
-        .delete(parseInt(req.params.id))
-      res.status(200).send("Deleted wilder");
+        .delete(parseInt(req.params.id, 10));
+      res.status(200).send('Deleted wilder');
     } catch (err) {
-      res.status(404).send("Error while deleting wilder")
+      res.status(404).send('Error while deleting wilder');
     }
-  },
+  }
+
+  static async addSkillToWilder(req, res) {
+    try {
+      const wilderToUpdate = await dataSource
+        .getRepository(Wilder)
+        .findOneBy({ id: req.params.idWilder });
+      if (!wilderToUpdate) {
+        res.status(404).send('Wilder not found');
+      }
+      const skillToAdd = await dataSource
+        .getRepository(Skill)
+        .findOneBy({ id: req.params.idSkill });
+      if (!skillToAdd) {
+        res.status(404).send('Wilder not found');
+      }
+      wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
+      await dataSource.getRepository(Wilder).save(wilderToUpdate);
+      res.status(200).send('Skill added to wilder');
+    } catch (err) {
+      console.log(err);
+      res.status(404).send('Error while creating skill');
+    }
+  }
 }
+
+module.exports = WilderController;

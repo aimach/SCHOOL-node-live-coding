@@ -1,64 +1,64 @@
-const dataSource = require("../utils").dataSource;
-const Skill = require("../entity/Skill");
-const Wilder = require("../entity/Wilder")
+const { dataSource } = require('../utils');
+const Skill = require('../entity/Skill');
 
-module.exports = {
-  create: async (req, res) => {
+class SkillController {
+  static async create(req, res) {
     try {
-      const skillToCreate = await dataSource
+      await dataSource
         .getRepository(Skill)
-        .save(req.body)
-      res.status(201).send("Created skill");
+        .save(req.body);
+      res.status(201).send('Created skill');
     } catch (err) {
-      console.log(err);
-      res.status(404).send("Error while creating skill")
+      if (err.code === 'SQLITE_CONSTRAINT') {
+        res.status(409).send('Skill already exists');
+      }
+      return res.status(400).send('Something went wrong');
     }
-  },
-  read: async (req, res) => {
+  }
+
+  static async read(req, res) {
     try {
       const skillToRead = await dataSource
         .getRepository(Skill)
-        .find()
+        .find();
       res.status(200).send(skillToRead);
     } catch (err) {
-      console.log(err);
-      res.status(404).send("Error while reading skills")
+      console.error('error', err);
+      res.status(400).send('Error while reading skills');
     }
-  },
-  update: async (req, res) => {
+  }
+
+  static async update(req, res) {
     try {
+      const { id } = req.params;
+      const existingSkill = await dataSource.getRepository(Skill).findOneBy({ id });
+      if (existingSkill === null) {
+        return res.status(404).send('Skill not found');
+      }
       await dataSource
         .getRepository(Skill)
-        .update(req.params.id, { name: req.body.name })
-      res.status(200).send("Updated skill");
+        .update(id, { name: req.body.name });
+      res.status(200).send('Updated skill');
     } catch (err) {
-      res.status(404).send("Error while updating skill")
+      res.status(400).send('Error while updating skill');
     }
-  },
-  delete: async (req, res) => {
+  }
+
+  static async delete(req, res) {
     try {
+      const { id } = req.params;
+      const existingSkill = await dataSource.getRepository(Skill).findOneBy({ id });
+      if (existingSkill === null) {
+        return res.status(404).send('Skill not found');
+      }
       await dataSource
         .getRepository(Skill)
-        .delete(parseInt(req.params.id))
-      res.status(200).send("Deleted skill");
+        .delete(parseInt(req.params.id, 10));
+      res.status(200).send('Deleted skill');
     } catch (err) {
-      res.status(404).send("Error while deleting skill")
+      res.status(400).send('Error while deleting skill');
     }
-  },
-  addSkillToWilder: async (req, res) => {
-    try {
-      const wilderToUpdate = await dataSource
-        .getRepository(Wilder)
-        .findOneBy({ id: req.params.idWilder });
-      const skillToAdd = await dataSource
-        .getRepository(Skill)
-        .findOneBy({ id: req.params.idSkill });
-      wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
-      await dataSource.getRepository(Wilder).save(wilderToUpdate);
-      res.status(200).send("Skill added to wilder");
-    } catch (err) {
-      console.log(err);
-      res.status(404).send("Error while creating skill")
-    }
-  },
+  }
 }
+
+module.exports = SkillController;
