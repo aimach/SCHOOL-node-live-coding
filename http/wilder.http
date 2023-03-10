@@ -33,3 +33,8 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:5000/api/wilder/76
+
+###
+
+DELETE http://localhost:5000/api/wilder/5/skill/8
+

@@ -24,7 +24,18 @@ class WilderController {
     try {
       const WilderToRead = await dataSource
         .getRepository(Wilder)
-        .find();
+        .find(
+        //   {
+        //   relations: {
+        //     skills: true,
+        //   },
+        //   where: {
+        //     skills: {
+        //       id:2,
+        //     }
+        //   }
+        // }
+        );
       res.status(200).send(WilderToRead);
     } catch (err) {
       console.log(err);
@@ -86,6 +97,31 @@ class WilderController {
     } catch (err) {
       console.log(err);
       res.status(404).send('Error while creating skill');
+    }
+  }
+
+  static async deleteSkillToWilder(req, res) {
+    try {
+      const wilderToUpdate = await dataSource
+        .getRepository(Wilder)
+        .findOneBy({ id: req.params.idWilder });
+      if (!wilderToUpdate) {
+        res.status(404).send('Wilder not found');
+      }
+      const skillToDelete = await dataSource
+        .getRepository(Skill)
+        .findOneBy({ id: req.params.idSkill });
+      if (!skillToDelete) {
+        res.status(404).send('Skill not found');
+      }
+      const skillsToUpdate = wilderToUpdate.skills
+        .filter((skill) => skill.id !== parseInt(req.params.idSkill, 10));
+      wilderToUpdate.skills = skillsToUpdate;
+      await dataSource.getRepository(Wilder).save(wilderToUpdate);
+      res.status(200).send('Skill deleted');
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Error while creating skill');
     }
   }
 }
