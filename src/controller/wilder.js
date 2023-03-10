@@ -11,8 +11,8 @@ class WilderController {
       if (test > 0) {
         res.status(403).send('Email already exist');
       } else {
-        await dataSource.getRepository(Wilder).save(req.body);
-        res.status(201).send('Created wilder');
+        const request = await dataSource.getRepository(Wilder).save(req.body);
+        res.status(201).send({ id: request.id });
       }
     } catch (err) {
       console.log(err);
@@ -58,9 +58,9 @@ class WilderController {
       await dataSource
         .getRepository(Wilder)
         .delete(parseInt(req.params.id, 10));
-      res.status(200).send('Deleted wilder');
+      return res.status(200).send('Deleted wilder');
     } catch (err) {
-      res.status(404).send('Error while deleting wilder');
+      return res.status(404).send('Error while deleting wilder');
     }
   }
 
@@ -72,13 +72,15 @@ class WilderController {
       if (!wilderToUpdate) {
         res.status(404).send('Wilder not found');
       }
-      const skillToAdd = await dataSource
-        .getRepository(Skill)
-        .findOneBy({ id: req.params.idSkill });
-      if (!skillToAdd) {
-        res.status(404).send('Wilder not found');
-      }
-      wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
+      req.body.skills.forEach(async (e) => {
+        const skillToAdd = await dataSource
+          .getRepository(Skill)
+          .findOneBy({ id: e });
+        if (!skillToAdd) {
+          res.status(404).send('Skill not found');
+        }
+        wilderToUpdate.skills = [...wilderToUpdate.skills, skillToAdd];
+      });
       await dataSource.getRepository(Wilder).save(wilderToUpdate);
       res.status(200).send('Skill added to wilder');
     } catch (err) {

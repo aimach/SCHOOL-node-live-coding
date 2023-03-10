@@ -22,7 +22,7 @@ app.use(express.json());
 //wilder
 app.get("/api/wilder", wilderController.read);
 app.post("/api/wilder", wilderController.create);
-app.post("/api/wilder/:idWilder/skill/:idSkill", wilderController.addSkillToWilder);
+app.post("/api/wilder/:idWilder", wilderController.addSkillToWilder);
 app.put("/api/wilder/:id", wilderController.update);
 app.delete("/api/wilder/:id", wilderController.delete);
 

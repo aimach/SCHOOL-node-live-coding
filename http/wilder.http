@@ -7,19 +7,18 @@ Content-Type: application/json
 
 {
   "name": "Nyota Uhura",
-  "email": "n.uhura@federation.com",
+  "email": "n.uhuraa@federation.com",
   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
 }
 
 ###
 
-POST http://localhost:5000/api/wilder/6/skill/3
+POST http://localhost:5000/api/wilder/73
 Content-Type: application/json
 
 {
-  "name": "Another Wilder"
+  "skills": [2, 3]
 }
-
 ###
 
 
@@ -33,4 +32,4 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:5000/api/wilder/6
+DELETE http://localhost:5000/api/wilder/76
